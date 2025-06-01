@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
     host:process.env.db_host,
     dialect:"mysql",
     port:process.env.db_port,
-})//making o
+})//making o h
 sequelize.authenticate()
     .then(() => {
         console.log("Database connected successfully");
