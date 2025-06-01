@@ -1,6 +1,11 @@
 //database connection code
-const Sequelize = require("sequelize")
+const {Sequelize, DataTypes }= require("sequelize")
+const makeBlogTable = require("../models/blogmodel");
 require("dotenv").config();
+
+
+ 
+
 
 const sequelize = new Sequelize({
     database:process.env.db_name,
@@ -17,4 +22,12 @@ sequelize.authenticate()
     .catch((err) => {
         console.error("Unable to connect to the database:", err);
     });
+
+    const db={}
+ db.blogs =require ("./../models/blogmodel")(sequelize,DataTypes)
+ 
+ sequelize.sync({alter:true}).then(() =>{
+    console.log("migrated sucessfully")//migration code
+ })
+
 module.exports = sequelize;
