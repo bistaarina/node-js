@@ -1,11 +1,11 @@
 // const { name } = require("ejs")
 const express = require("express")
-require("./database/db")
+const db = require("./database/db") // database connection 
 const app = express()
 // const app = require("express")()
 app.set("view engine", "ejs")//tells express js to set environmnt for ejs to run
 
-
+app.use(express.urlencoded({ extended:true}))
 // app.get("/contact", function(req, res){
 //     // let name ="arina"
 //     res.render("contact",{age:23,name:"arina"})
@@ -22,7 +22,7 @@ app.get("/",(req,res)=>{
     res.render("authentication/get_todopage", )//rendering todo-page.ejs
 
 })
-// addtodo page
+// add todo page
 app.get("/add-todo",(req,res)=>{
     res.render("authentication/add_todopage", )
 
@@ -45,6 +45,25 @@ app.get("/register",(req,res)=>{
 
 })
 
+
+
+app.post('/register', async (req, res) => {
+    const{ username, email,password,confirm_password } = req.body
+    if (password !== confirm_password) {
+         res.send('Passwords do not match');
+    }
+
+await db.users.create({
+         username,
+          email,
+         password
+          
+
+        
+    })
+    
+  
+})
 app.listen(3000, function(){
     console.log("Backend has started at port 3000")
 })
