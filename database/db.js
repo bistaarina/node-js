@@ -26,7 +26,8 @@ sequelize.authenticate()
     const db={}
  db.blogs =require ("./../models/blogmodel")(sequelize,DataTypes)
  db.users = require ("./../models/usermodel")(sequelize,DataTypes)
- 
+ db.Todos = require ("./../models/todomode")(sequelize,DataTypes)
+
  sequelize.sync({alter:true}).then(() =>{
     console.log("migrated sucessfully")//migration code
  })

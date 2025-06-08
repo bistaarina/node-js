@@ -6,6 +6,7 @@ const app = express()
 app.set("view engine", "ejs")//tells express js to set environmnt for ejs to run
 
 app.use(express.urlencoded({ extended:true}))
+const bcrypt = require("bcrypt");
 // app.get("/contact", function(req, res){
 //     // let name ="arina"
 //     res.render("contact",{age:23,name:"arina"})
@@ -44,8 +45,20 @@ app.get("/register",(req,res)=>{
 
 
 })
+app.get("/todo-list",(req,res)=>{
+    res.render("todo-insert")
+})
 
+app.post('/todo-list', async (req,res) => { 
+    const {task,description,date,status} = req.body;
 
+    await db.Todos.create({
+        task: task,
+        description: description,
+        date: date,
+        status: status
+    });
+})
 
 app.post('/register', async (req, res) => {
     const{ username, email,password,confirm_password } = req.body
@@ -54,16 +67,16 @@ app.post('/register', async (req, res) => {
     }
 
 await db.users.create({
-         username,
-          email,
-         password
+         username: username,
+          email: email,
+         password:bcrypt.hashSync(password, 10) // Hashing the password
           
 
         
     })
-    
-  
 })
+
+
 app.listen(3000, function(){
     console.log("Backend has started at port 3000")
 })

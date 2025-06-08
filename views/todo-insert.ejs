@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Todo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body>
+    <div class="bg-gray-200 h-screen flex items-center justify-center p-4">
+        <div class="bg-white p-6 shadow-lg rounded-xl w-96">
+            <form action="/todo-list" method="POST">
+                <div class="text-2xl text-blue-800 font-bold capitalize text-center mb-4">
+                    <h3>Add New Todo</h3>
+                </div>
+
+                <!-- Task Input -->
+                <div class="mb-4">
+                    <div class="capitalize text-xl mb-2">
+                        <label for="task">Task</label>
+                    </div>
+                    <div class="border-2 relative">
+                        <input 
+                            id="task"
+                            name="task"
+                            class="w-full px-4 py-2 outline-blue-800" 
+                            type="text" 
+                            placeholder="Enter task title"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Description Input -->
+                <div class="mb-4">
+                    <div class="capitalize text-xl mb-2">
+                        <label for="description">Description</label>
+                    </div>
+                    <div class="border-2 relative">
+                        <textarea 
+                            id="description"
+                            name="description"
+                            class="w-full px-4 py-2 outline-blue-800" 
+                            rows="3"
+                            placeholder="Enter task description"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Date Input -->
+                <div class="mb-4">
+                    <div class="capitalize text-xl mb-2">
+                        <label for="date">Due Date</label>
+                    </div>
+                    <div class="border-2 relative">
+                        <input 
+                            id="date"
+                            name="date"
+                            class="w-full px-4 py-2 outline-blue-800" 
+                            type="date"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Status Input -->
+                <div class="mb-6">
+                    <div class="capitalize text-xl mb-2">
+                        <label for="status">Status</label>
+                    </div>
+                    <div class="border-2 relative">
+                        <select 
+                            id="status"
+                            name="status"
+                            class="w-full px-4 py-2 outline-blue-800"
+                            required
+                        >
+                            <option value="pending">Pending</option>
+                            <option value="COMPLETE">Complete</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button 
+                        type="submit"
+                        class="bg-blue-800 text-xl text-white font-medium uppercase p-2 rounded-lg w-full opacity-90 hover:opacity-100"
+                    >
+                        Add Todo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
