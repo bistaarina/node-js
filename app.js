@@ -24,8 +24,11 @@ app.get("/",(req,res)=>{
 
 })
 // add todo page
-app.get("/add-todo",(req,res)=>{
-    res.render("authentication/add_todopage", )
+app.get("/add-todo",async (req,res)=>{
+   const datas= await db.Todos.findAll()// selecting all the todos from the database
+//    console.log(datas) 
+   res.render("authentication/add_todopage",{todos:datas} )
+
 
 })
 //update todo page
