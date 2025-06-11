@@ -37,7 +37,7 @@ app.get("/update-todo",(req,res)=>{
 
 })
 //login-todo page
-app.get("/login-todo",(req,res)=>{
+app.get("/login",(req,res)=>{
 res.render("authentication/login_todo_page")
 })
 
@@ -64,7 +64,8 @@ app.post('/todo-list', async (req,res) => {
 })
 
 app.post('/register', async (req, res) => {
-    const{ username, email,password,confirm_password } = req.body
+    console.log(req.body);
+    const{ username,email,password,description,confirm_password } = req.body
     if (password !== confirm_password) {
          res.send('Passwords do not match');
     }
@@ -72,12 +73,31 @@ app.post('/register', async (req, res) => {
 await db.users.create({
          username: username,
           email: email,
+          description: description,
          password:bcrypt.hashSync(password, 10) // Hashing the password
-          
 
-        
     })
+    res.send('User registered successfully');
 })
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await db.users.findAll({ 
+        where: {
+             email: email } 
+            });
+    
+    if (user.length==0){
+        res.send('User not found');
+    } 
+   else{
+    const isPasswordValid = bcrypt.compareSync(password, user[0].password);
+    if (isPasswordValid) {
+        res.send('Login successful');
+    } else {
+        res.send('Invalid password');
+    }
+   }
+});
 
 
 app.listen(3000, function(){
