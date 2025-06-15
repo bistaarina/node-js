@@ -7,6 +7,8 @@ app.set("view engine", "ejs")//tells express js to set environmnt for ejs to run
 
 app.use(express.urlencoded({ extended:true}))
 const bcrypt = require("bcrypt");
+
+const jwt = require("jsonwebtoken")
 // app.get("/contact", function(req, res){
 //     // let name ="arina"
 //     res.render("contact",{age:23,name:"arina"})
@@ -92,7 +94,13 @@ app.post('/login', async (req, res) => {
    else{
     const isPasswordValid = bcrypt.compareSync(password, user[0].password);
     if (isPasswordValid) {
-        res.send('Login successful');
+        //token generation
+        const token = jwt.sign({name:"arina"},"thisismee",{
+            expiresIn: '1d' // Token will expire in 1 days
+        })
+        res.cookie('token', token)
+        res.redirect("/")
+       // res.send(token); // Send the token to the client
     } else {
         res.send('Invalid password');
     }
