@@ -9,14 +9,10 @@ app.use(express.urlencoded({ extended:true}))
 const bcrypt = require("bcrypt");
 
 const jwt = require("jsonwebtoken")
-// app.get("/contact", function(req, res){
-//     // let name ="arina"
-//     res.render("contact",{age:23,name:"arina"})
-    
-// })
-// app.get("/about", function(req, res){
-//     res.render("about")
-// })
+const isloginornot = require("./middleware/isloginornot")
+
+const cookieParser = require("cookie-parser")
+app.use(cookieParser()) //middleware to parse cookies
 
 
 //projectt
@@ -26,8 +22,8 @@ app.get("/",(req,res)=>{
 
 })
 // add todo page
-app.get("/add-todo",async (req,res)=>{
-   const datas= await db.Todos.findAll()// selecting all the todos from the database
+app.get("/add-todo", isloginornot, (req,res)=>{
+   //const datas= await db.Todos.findAll()// selecting all the todos from the database
 //    console.log(datas) 
    res.render("authentication/add_todopage",{todos:datas} )
 
