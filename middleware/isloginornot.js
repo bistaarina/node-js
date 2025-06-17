@@ -14,8 +14,8 @@ const isloginornot = (req, res)=>{
             if(err){
                 res.send("invalid token");
             }else{
-                res.send("valid token")
-                
+               res.userID= XPathResult.id
+                next()
     }
 })
     }

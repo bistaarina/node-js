@@ -22,7 +22,7 @@ app.get("/",(req,res)=>{
 
 })
 // add todo page
-app.get("/add-todo", isloginornot, (req,res)=>{
+app.get("/add-todo", isloginornot, (req,res,next)=>{
    //const datas= await db.Todos.findAll()// selecting all the todos from the database
 //    console.log(datas) 
    res.render("authentication/add_todopage",{todos:datas} )
@@ -75,7 +75,7 @@ await db.users.create({
          password:bcrypt.hashSync(password, 10) // Hashing the password
 
     })
-    res.send('User registered successfully');
+    res.redirect('/login');
 })
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -91,11 +91,11 @@ app.post('/login', async (req, res) => {
     const isPasswordValid = bcrypt.compareSync(password, user[0].password);
     if (isPasswordValid) {
         //token generation
-        const token = jwt.sign({name:"arina"},"thisismee",{
+        const token = jwt.sign({id:user[0].id},"thisismeee",{
             expiresIn: '1d' // Token will expire in 1 days
         })
         res.cookie('token', token)
-        res.redirect("/")
+        res.send("done clearly")
        // res.send(token); // Send the token to the client
     } else {
         res.send('Invalid password');
