@@ -15,23 +15,27 @@ const cookieParser = require("cookie-parser")
 app.use(cookieParser()) //middleware to parse cookies
 
 
-//projectt
 //get todo-page
-app.get("/",(req,res)=>{
-    res.render("authentication/get_todopage", )//rendering todo-page.ejs
+app.get("/", isloginornot,async(req,res)=>{
+    res.render("authentication/get_todopage", ) //rendering todo-page.ejs 
 
 })
 // add todo page
-app.get("/add-todo", isloginornot, (req,res,next)=>{
-   //const datas= await db.Todos.findAll()// selecting all the todos from the database
+app.get("/add-todo", isloginornot, async (req,res,next)=>{
+    const userId = req.userId
+   const datas= await db.Todos.findAll({
+    where : {
+        userId : userId
+    }
+   })// selecting all the todos from the database
 //    console.log(datas) 
-   res.render("authentication/add_todopage",{todos:datas} )
+   res.render("todo/add_todopage",{todos:datas} )
 
 
 })
-//update todo page
+//update todo page...
 app.get("/update-todo",(req,res)=>{
-    res.render("authentication/update_todo_page")
+    res.render("todo/update_todo_page")
 
 })
 //login-todo page
@@ -46,27 +50,43 @@ app.get("/register",(req,res)=>{
 
 
 })
-app.get("/todo-list",(req,res)=>{
-    res.render("todo-insert")
+app.get("/todo_insert",(req,res)=>{
+    res.render("todo/todo_insert")
 })
 
-app.post('/todo-list', async (req,res) => { 
+app.get("/delete/:id", async (req, res) => {
+    const id = req.params.id
+
+    await db.Todos.destroy({
+        where: {
+            id: id
+        }
+    })
+    res.send("Deleted successfully")
+})
+
+app.post('/todo-list', isloginornot, async (req,res) => { 
+    const userId = req.userId // Assuming you have userID from the authenticated user
+console.log(req.userId)
     const {task,description,date,status} = req.body;
 
     await db.Todos.create({
         task: task,
         description: description,
         date: date,
-        status: status
+        status: status, 
+        userId : userId
     });
+
+    res.redirect("/add-todo");
 })
 
 app.post('/register', async (req, res) => {
     console.log(req.body);
     const{ username,email,password,description,confirm_password } = req.body
-    if (password !== confirm_password) {
-         res.send('Passwords do not match');
-    }
+    // if (password !== confirm_password) {
+    //      res.send('Passwords do not match');
+    // }
 
 await db.users.create({
          username: username,
@@ -79,29 +99,38 @@ await db.users.create({
 })
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
+    // Check if the user exists in the database
     const user = await db.users.findAll({ 
         where: {
              email: email } 
             });
     
-    if (user.length==0){
-        res.send('User not found');
+    //select * from users where email = email
+    // If user not found, send an error response        
+    if (user.length==0){ // email wala user vetena vane
+        res.send('not registered email');
     } 
    else{
-    const isPasswordValid = bcrypt.compareSync(password, user[0].password);
-    if (isPasswordValid) {
+
+    //now check password, first --> plain password(form bata aako), hased password already register garda table ma baseko
+    const isPasswordMatch = bcrypt.compareSync(password, user[0].password)
+    if (isPasswordMatch) {
         //token generation
-        const token = jwt.sign({id:user[0].id},"thisismeee",{
+        const token = jwt.sign({id: user[0].id },"thisismeee",{
             expiresIn: '1d' // Token will expire in 1 days
         })
+
         res.cookie('token', token)
-        res.send("done clearly")
+        res.redirect('/'); // Redirect to the home page after successful login
        // res.send(token); // Send the token to the client
+    
     } else {
-        res.send('Invalid password');
+        res.send('Invalid credentials'); 
     }
    }
 });
+
+
 
 
 app.listen(3000, function(){

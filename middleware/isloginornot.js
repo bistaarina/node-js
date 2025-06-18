@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 
-const isloginornot = (req, res)=>{
+const isloginornot = (req, res,next)=>{
     //receive token
     const token = req.cookies.token
     //verifies token
@@ -10,12 +10,12 @@ const isloginornot = (req, res)=>{
 
     }else{
         //verify the token
-        jwt.verify(token, "this is my secrethahaa", (err, decoded)=>{
+        jwt.verify(token, "thisismeee", (err, decoded)=>{
             if(err){
                 res.send("invalid token");
             }else{
-               res.userID= XPathResult.id
-                next()
+               req.userId= decoded.id
+                next()  
     }
 })
     }
